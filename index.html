@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cornerstone General Contractors — Property Survey</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="vendor/leaflet.css">
+<style>
+:root{
+  --red:#DD1A32; --ink:#1D1E28; --slate:#334146; --mid:#6B7680; --line:#E3E6E9; --bg:#FFFFFF; --bg2:#F5F6F7;
+  --radius:10px; --shadow:0 1px 2px rgba(29,30,40,.06),0 8px 24px rgba(29,30,40,.06);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Source Sans 3","Source Sans Pro",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5}
+h1,h2,h3,h4{font-family:Montserrat,"Source Sans 3",sans-serif;margin:0;letter-spacing:-.01em}
+a{color:inherit}
+img{display:block;max-width:100%}
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
+.eyebrow{font-family:Montserrat,sans-serif;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--red)}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(12px);-webkit-backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
+.nav .logo img{height:40px;width:auto}
+.nav ul{list-style:none;margin:0;padding:0;display:flex;gap:28px}
+.nav ul a{text-decoration:none;font-weight:600;font-size:14px;color:var(--slate)}
+.nav ul a:hover{color:var(--red)}
+.nav .by{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--mid);white-space:nowrap}
+.nav .by img{height:22px;width:auto;color:var(--ink)}
+@media (max-width:860px){.nav ul{display:none}.nav .by span{display:none}}
+
+/* hero */
+.hero{padding:72px 0 48px}
+.hero h1{font-size:clamp(30px,4.2vw,50px);font-weight:700;line-height:1.08;max-width:14em;margin-top:12px}
+.hero p{font-size:18px;color:var(--slate);max-width:44em;margin:18px 0 0}
+.hero .meta{display:flex;flex-wrap:wrap;gap:12px 36px;margin-top:28px;font-size:14px;color:var(--mid)}
+.hero .meta b{display:block;color:var(--ink);font-weight:600;font-size:15px}
+
+/* sections */
+section{padding:56px 0}
+section.alt{background:var(--bg2)}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.sec-head h2{font-size:28px;font-weight:700}
+.sec-head p{margin:4px 0 0;color:var(--mid);font-size:15px}
+
+/* map */
+#map{height:560px;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);background:#dfe5ea;position:relative}
+#map-fallback{display:none;width:100%;height:100%}
+.pin{width:30px;height:30px;border-radius:50%;background:var(--red);color:#fff;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.35);font:700 13px Montserrat,sans-serif;display:flex;align-items:center;justify-content:center}
+.pin.hq{background:var(--ink);border-radius:6px;transform:rotate(45deg);width:26px;height:26px}
+.pin.hq span{transform:rotate(-45deg);font-size:10px}
+.leaflet-popup-content{font-family:"Source Sans 3",sans-serif;font-size:14px;margin:10px 14px;line-height:1.4}
+.leaflet-popup-content b{font-family:Montserrat,sans-serif;font-size:13px}
+.leaflet-popup-content-wrapper{border-radius:8px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:14px;font-size:14px;color:var(--slate)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--red);color:#fff;font:700 11px Montserrat,sans-serif;align-items:center;justify-content:center;font-style:normal}
+.legend i.hq{background:var(--ink);border-radius:4px}
+
+/* comparison table */
+.tablewrap{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+table.cmp{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed;font-size:14px}
+table.cmp th,table.cmp td{padding:12px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+table.cmp th{background:var(--bg2);font-family:Montserrat,sans-serif;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--slate);font-weight:600;cursor:pointer;user-select:none}
+table.cmp th:hover{color:var(--red)}
+table.cmp th .arr{opacity:.35;font-size:10px;margin-left:4px}
+table.cmp th.on .arr{opacity:1;color:var(--red)}
+table.cmp tbody tr:last-child td{border-bottom:none}
+table.cmp tbody tr:hover{background:#FBFBFC}
+table.cmp td.num{font-variant-numeric:tabular-nums}
+table.cmp td .n{display:inline-flex;width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;font:700 12px Montserrat,sans-serif;align-items:center;justify-content:center}
+table.cmp td .name{font-weight:600;display:block}
+table.cmp td .sub{color:var(--mid);font-size:13px;display:block}
+table.cmp td a{text-decoration:none}
+table.cmp td a:hover .name{color:var(--red)}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600;font-family:Montserrat,sans-serif;white-space:nowrap}
+.badge.sale{background:#FDE8EB;color:#B0122A}
+.badge.lease-sale{background:#EEF1F3;color:var(--slate)}
+.badge.lease-option{background:#EEF1F3;color:var(--slate)}
+.badge.lease{background:#EEF1F3;color:var(--slate)}
+.tnote{font-size:13px;color:var(--mid);margin:12px 0 0}
+@media (max-width:820px){
+  table.cmp thead{display:none}
+  table.cmp,table.cmp tbody,table.cmp tr,table.cmp td{display:block;width:100%}
+  table.cmp tr{border-bottom:8px solid var(--bg2)}
+  table.cmp td{display:grid;grid-template-columns:38% 1fr;gap:10px;padding:9px 14px;border-bottom:1px solid var(--line)}
+  table.cmp td::before{content:attr(data-l);font-family:Montserrat,sans-serif;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mid);font-weight:600;padding-top:2px}
+  table.cmp td.first{grid-template-columns:1fr;background:var(--bg2);padding:14px}
+  table.cmp td.first::before{display:none}
+}
+
+/* property cards */
+.prop{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:36px;scroll-margin-top:84px}
+.prop .top{display:grid;grid-template-columns:1.25fr 1fr;gap:0}
+.prop .gallery{position:relative;background:#eee;min-height:320px}
+.prop .gallery img.main{width:100%;height:100%;object-fit:cover;aspect-ratio:3/2;cursor:zoom-in}
+.prop .thumbs{position:absolute;left:12px;bottom:12px;display:flex;gap:6px;flex-wrap:wrap}
+.prop .thumbs img{width:54px;height:40px;object-fit:cover;border-radius:4px;border:2px solid rgba(255,255,255,.9);cursor:pointer;opacity:.85}
+.prop .thumbs img:hover,.prop .thumbs img.on{opacity:1;border-color:var(--red)}
+.prop .info{padding:28px 30px}
+.prop .info h3{font-size:24px;font-weight:700;line-height:1.15;margin-top:8px}
+.prop .info .addr{color:var(--slate);margin:6px 0 16px;font-size:15px}
+.prop .numrow{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 16px}
+.prop .stat{background:var(--bg2);border-radius:8px;padding:10px 12px;min-width:120px;flex:1}
+.prop .stat b{display:block;font-family:Montserrat,sans-serif;font-size:17px;font-weight:700;line-height:1.1}
+.prop .stat span{font-size:12px;color:var(--mid);text-transform:uppercase;letter-spacing:.05em;font-family:Montserrat,sans-serif;font-weight:600}
+.prop dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;font-size:14px}
+.prop dt{color:var(--mid);white-space:nowrap}
+.prop dd{margin:0}
+.prop .hl{margin:0;padding:0 0 0 18px;font-size:15px}
+.prop .hl li{margin:4px 0}
+.prop .bottom{display:grid;grid-template-columns:1fr 1fr;gap:28px;padding:24px 30px;border-top:1px solid var(--line);background:#FCFCFD}
+.prop .bottom h4{font-family:Montserrat,sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);margin-bottom:10px}
+.plans{display:flex;gap:12px;flex-wrap:wrap}
+.plans figure{margin:0;width:calc(50% - 6px);cursor:zoom-in}
+.plans figure img{border:1px solid var(--line);border-radius:6px;background:#fff;width:100%;aspect-ratio:4/3;object-fit:contain}
+.plans figcaption{font-size:12px;color:var(--mid);margin-top:4px}
+.links{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.btn{display:inline-block;padding:9px 16px;border-radius:7px;font-weight:600;font-size:14px;text-decoration:none;border:1px solid var(--line);color:var(--ink);background:#fff}
+.btn:hover{border-color:var(--ink)}
+.btn.red{background:var(--red);border-color:var(--red);color:#fff}
+.btn.red:hover{background:#c41730}
+.listing{font-size:13px;color:var(--mid);margin-top:14px}
+@media (max-width:900px){.prop .top,.prop .bottom{grid-template-columns:1fr}.prop .gallery{min-height:220px}.prop .info{padding:22px}}
+@media (max-width:520px){.plans figure{width:100%}}
+
+/* team */
+.team{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.member{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.member img{width:96px;height:96px;border-radius:50%;object-fit:cover;margin-bottom:14px}
+.member h3{font-size:17px;font-weight:700}
+.member .t{font-size:13px;color:var(--mid);margin:2px 0 10px}
+.member p{font-size:14px;margin:0 0 12px;color:var(--slate)}
+.member a{display:block;font-size:14px;text-decoration:none;color:var(--ink)}
+.member a:hover{color:var(--red)}
+@media (max-width:1000px){.team{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.team{grid-template-columns:1fr}}
+
+/* contact */
+.contact{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.contact .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow)}
+.contact .card h3{font-size:16px;margin-bottom:8px}
+.contact .card p{margin:4px 0;font-size:15px}
+.contact .card a{text-decoration:none}
+.contact .card a:hover{color:var(--red)}
+@media (max-width:800px){.contact{grid-template-columns:1fr}}
+
+footer{border-top:1px solid var(--line);padding:28px 0 40px;font-size:12px;color:var(--mid)}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+footer img{height:20px;width:auto;color:var(--ink)}
+footer p{max-width:70em;margin:10px 0 0}
+
+/* lightbox */
+#lb{position:fixed;inset:0;background:rgba(20,21,28,.94);display:none;align-items:center;justify-content:center;z-index:100;padding:24px}
+#lb.open{display:flex}
+#lb img{max-width:min(96vw,1500px);max-height:88vh;object-fit:contain;border-radius:6px;background:#fff}
+#lb .x{position:absolute;top:16px;right:20px;color:#fff;font-size:34px;line-height:1;cursor:pointer;background:none;border:0}
+#lb .cap{position:absolute;bottom:18px;left:0;right:0;text-align:center;color:#ddd;font-size:14px}
+#lb .nv{position:absolute;top:50%;transform:translateY(-50%);color:#fff;font-size:44px;background:none;border:0;cursor:pointer;padding:20px;opacity:.8}
+#lb .nv:hover{opacity:1}
+#lb .prev{left:4px}#lb .next{right:4px}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="logo" href="#top"><img src="img/cs_black.svg" alt="Cornerstone General Contractors"></a>
+    <ul>
+      <li><a href="#map">Map</a></li>
+      <li><a href="#compare">Comparison</a></li>
+      <li><a href="#properties">Properties</a></li>
+      <li><a href="#team">Team</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="by"><span>Prepared by Kidder Mathews</span><img src="img/km-logo.svg" alt="Kidder Mathews"></div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="eyebrow">Property Survey</div>
+    <h1>Purchase &amp; lease options for Cornerstone General Contractors</h1>
+    <p>Five buildings on the Eastside and Northend, from 3,500 SF suites up to 45,000 SF, ranging from listed-for-sale to lease with a possible purchase option. Details, floor plans and flyers for each are below.</p>
+    <div class="meta">
+      <div><b>Prepared for</b>Dave Flynn, Cornerstone General Contractors</div>
+      <div><b>Prepared by</b>Todd Gauthier, Jason Bloom, Carter Nicholson &amp; Greg Fuchs — Kidder Mathews</div>
+      <div><b>Date</b>October 22, 2026</div>
+    </div>
+  </div>
+</header>
+
+<section id="map-sec" style="padding-top:16px">
+  <div class="wrap">
+    <div class="sec-head"><div><h2 id="map-h">Map</h2><p>Numbered pins match the comparison table and property details. Distances are straight-line from the Cornerstone office in Bothell.</p></div></div>
+    <div id="map"><svg id="map-fallback" viewBox="0 0 1000 560"></svg></div>
+    <div class="legend" id="legend"></div>
+  </div>
+</section>
+
+<section class="alt" id="compare">
+  <div class="wrap">
+    <div class="sec-head"><div><h2>Comparison</h2><p>Click a column header to sort. Click a property name to jump to its details.</p></div></div>
+    <div class="tablewrap">
+      <table class="cmp" id="cmp">
+        <colgroup>
+          <col style="width:23%"><col style="width:9%"><col style="width:10%"><col style="width:13%"><col style="width:13%"><col style="width:12%"><col style="width:12%"><col style="width:8%">
+        </colgroup>
+        <thead><tr>
+          <th data-k="n">Property<span class="arr">▲</span></th>
+          <th data-k="city">City<span class="arr">▲</span></th>
+          <th data-k="type">Type<span class="arr">▲</span></th>
+          <th data-k="sf">Size<span class="arr">▲</span></th>
+          <th data-k="office">Office / Whse<span class="arr">▲</span></th>
+          <th data-k="dealKey">Structure<span class="arr">▲</span></th>
+          <th data-k="price">Asking<span class="arr">▲</span></th>
+          <th data-k="mi">From HQ<span class="arr">▲</span></th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="tnote">Asking figures are per the listing brokers and subject to change. Lease rates shown per SF per year. Sale pricing for the lease listings has not been published and would be negotiated.</p>
+  </div>
+</section>
+
+<section id="properties">
+  <div class="wrap">
+    <div class="sec-head"><div><h2>Properties</h2><p>Photos, floor plans and specifications from each listing.</p></div></div>
+    <div id="props"></div>
+  </div>
+</section>
+
+<section class="alt" id="team">
+  <div class="wrap">
+    <div class="sec-head"><div><h2>Team</h2><p>Kidder Mathews — Bellevue</p></div></div>
+    <div class="team" id="teamgrid"></div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="sec-head"><div><h2>Contact</h2></div></div>
+    <div class="contact" id="contactgrid"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <img src="img/km-logo.svg" alt="Kidder Mathews">
+    <div>Kidder Mathews · 500 108th Avenue NE, Suite 2400, Bellevue, WA 98004 · kidder.com</div>
+  </div>
+  <div class="wrap"><p>This information supplied herein is from sources we deem reliable. It is provided without any representation, warranty, or guarantee, expressed or implied as to its accuracy. Prospective buyer or tenant should conduct an independent investigation and verification of all matters deemed to be material. Consult your attorney, accountant, or other professional advisor. Prepared for Cornerstone General Contractors; not for distribution.</p></div>
+</footer>
+
+<div id="lb" role="dialog" aria-modal="true">
+  <button class="x" aria-label="Close">×</button>
+  <button class="nv prev" aria-label="Previous">‹</button>
+  <img alt="">
+  <button class="nv next" aria-label="Next">›</button>
+  <div class="cap"></div>
+</div>
+
+<script src="data.js"></script>
+<script src="vendor/leaflet.js"></script>
+<script>
+(function(){
+  const $=s=>document.querySelector(s);
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const fmt=n=>n.toLocaleString('en-US');
+  const hav=(a,b,c,d)=>{const R=3958.8,r=Math.PI/180,dl=(c-a)*r,dn=(d-b)*r,x=Math.sin(dl/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(x));};
+  PROPERTIES.forEach(p=>{p.mi=Math.round(hav(HQ.lat,HQ.lon,p.lat,p.lon)*10)/10;});
+
+  /* ---------- table ---------- */
+  const tbody=$('#cmp tbody');
+  const priceSort=p=>({'play-visions':9200000})[p.id]||(p.price.startsWith('$')?parseFloat(p.price.replace(/[^0-9.]/g,''))*1000:1e12);
+  function row(p){
+    return `<tr>
+      <td class="first" data-l="Property"><a href="#${p.id}"><span class="n">${p.n}</span>&nbsp; <span class="name">${esc(p.name)}</span><span class="sub">${esc(p.addr)}, ${esc(p.city)}</span></a></td>
+      <td data-l="City">${esc(p.city)}</td>
+      <td data-l="Type">${esc(p.type)}</td>
+      <td class="num" data-l="Size">${esc(p.sfLabel)}</td>
+      <td class="num" data-l="Office / Whse">${p.wh?fmt(p.office)+' / '+fmt(p.wh):fmt(p.office)+' office'}<span class="sub">${p.id==='play-visions'?'office can be expanded':p.id==='160th-interchange'?'shell — configurable':''}</span></td>
+      <td data-l="Structure"><span class="badge ${p.dealKey}">${esc(p.deal)}</span><span class="sub">${esc(p.dealNote)}</span></td>
+      <td class="num" data-l="Asking"><b>${esc(p.price)}</b><span class="sub">${esc(p.priceNote)}</span></td>
+      <td class="num" data-l="From HQ">${p.mi} mi</td>
+    </tr>`;
+  }
+  let sortK='n',dir=1;
+  function render(){
+    const rows=[...PROPERTIES].sort((a,b)=>{
+      let x=a[sortK],y=b[sortK];
+      if(sortK==='price'){x=priceSort(a);y=priceSort(b);}
+      if(typeof x==='string'){return x.localeCompare(y)*dir;}
+      return (x-y)*dir;
+    });
+    tbody.innerHTML=rows.map(row).join('');
+    document.querySelectorAll('#cmp th').forEach(th=>{th.classList.toggle('on',th.dataset.k===sortK);th.querySelector('.arr').textContent=(th.dataset.k===sortK&&dir<0)?'▼':'▲';});
+  }
+  document.querySelectorAll('#cmp th').forEach(th=>th.addEventListener('click',()=>{const k=th.dataset.k;if(sortK===k)dir=-dir;else{sortK=k;dir=1;}render();}));
+  render();
+
+  /* ---------- property cards ---------- */
+  const propsEl=$('#props');
+  propsEl.innerHTML=PROPERTIES.map(p=>`
+  <article class="prop" id="${p.id}">
+    <div class="top">
+      <div class="gallery">
+        <img class="main" src="${p.imgs[0]}" alt="${esc(p.name)}" data-i="0">
+        <div class="thumbs">${p.imgs.map((s,i)=>`<img src="${s}" data-i="${i}" class="${i===0?'on':''}" alt="">`).join('')}</div>
+      </div>
+      <div class="info">
+        <div class="eyebrow">${p.n} · ${esc(p.type)} · <span class="badge ${p.dealKey}" style="vertical-align:1px">${esc(p.deal)}</span></div>
+        <h3>${esc(p.name)}</h3>
+        <div class="addr">${esc(p.addr)}, ${esc(p.city)}, WA ${p.zip} · ${p.mi} mi from HQ</div>
+        <div class="numrow">
+          <div class="stat"><b>${esc(p.sfShort)}</b><span>Square feet</span></div>
+          <div class="stat"><b>${esc(p.price)}</b><span>Asking</span></div>
+          <div class="stat"><b>${esc(p.avail)}</b><span>Available</span></div>
+        </div>
+        <dl>
+          <dt>Office / warehouse</dt><dd>${esc(p.officeLabel)}</dd>
+          <dt>Structure</dt><dd>${esc(p.dealNote)}</dd>
+          <dt>Stories</dt><dd>${esc(p.stories)}</dd>
+          ${p.clear!=='—'?`<dt>Clear height</dt><dd>${esc(p.clear)}</dd>`:''}
+          <dt>Loading</dt><dd>${esc(p.doors)}</dd>
+          ${p.power!=='—'?`<dt>Power</dt><dd>${esc(p.power)}</dd>`:''}
+          <dt>Parking</dt><dd>${esc(p.parking)}</dd>
+          ${p.built!=='—'?`<dt>Year built</dt><dd>${esc(p.built)}</dd>`:''}
+          ${p.lot!=='—'?`<dt>Site</dt><dd>${esc(p.lot)}</dd>`:''}
+        </dl>
+      </div>
+    </div>
+    <div class="bottom">
+      <div>
+        <h4>Highlights</h4>
+        <ul class="hl">${p.hl.map(h=>`<li>${esc(h)}</li>`).join('')}</ul>
+        <div class="links">
+          ${p.flyer?`<a class="btn red" href="${p.flyer}" target="_blank" rel="noopener">Flyer (PDF)</a>`:''}
+          <a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(p.addr+', '+p.city+', WA '+p.zip)}" target="_blank" rel="noopener">Directions</a>
+        </div>
+        <div class="listing">Listed by ${esc(p.listing)}</div>
+      </div>
+      <div>
+        ${p.plans.length?`<h4>Floor plans</h4><div class="plans">${p.plans.map(([c,s])=>`<figure data-src="${s}" data-cap="${esc(c)}"><img src="${s}" alt="${esc(c)}" loading="lazy"><figcaption>${esc(c)}</figcaption></figure>`).join('')}</div>`:`<h4>Floor plans</h4><p style="font-size:14px;color:var(--mid);margin:0">Floor plan available on request.</p>`}
+      </div>
+    </div>
+  </article>`).join('');
+
+  /* gallery + lightbox */
+  const lb=$('#lb'),lbImg=lb.querySelector('img'),lbCap=lb.querySelector('.cap');
+  let lbList=[],lbI=0;
+  function openLB(list,i){lbList=list;lbI=i;show();lb.classList.add('open');document.body.style.overflow='hidden';}
+  function show(){const it=lbList[lbI];lbImg.src=it[0];lbCap.textContent=it[1]||'';lb.querySelector('.prev').style.visibility=lb.querySelector('.next').style.visibility=lbList.length>1?'visible':'hidden';}
+  function closeLB(){lb.classList.remove('open');document.body.style.overflow='';}
+  lb.querySelector('.x').onclick=closeLB;
+  lb.addEventListener('click',e=>{if(e.target===lb)closeLB();});
+  lb.querySelector('.prev').onclick=()=>{lbI=(lbI-1+lbList.length)%lbList.length;show();};
+  lb.querySelector('.next').onclick=()=>{lbI=(lbI+1)%lbList.length;show();};
+  document.addEventListener('keydown',e=>{if(!lb.classList.contains('open'))return;if(e.key==='Escape')closeLB();if(e.key==='ArrowLeft')lb.querySelector('.prev').click();if(e.key==='ArrowRight')lb.querySelector('.next').click();});
+  propsEl.querySelectorAll('.prop').forEach(art=>{
+    const p=PROPERTIES.find(x=>x.id===art.id);
+    const main=art.querySelector('img.main');
+    art.querySelectorAll('.thumbs img').forEach(t=>t.addEventListener('click',()=>{main.src=t.src;main.dataset.i=t.dataset.i;art.querySelectorAll('.thumbs img').forEach(x=>x.classList.toggle('on',x===t));}));
+    main.addEventListener('click',()=>openLB(p.imgs.map(s=>[s,p.name]),+main.dataset.i));
+    art.querySelectorAll('.plans figure').forEach((f,i)=>f.addEventListener('click',()=>openLB(p.plans.map(([c,s])=>[s,p.name+' — '+c]),i)));
+  });
+
+  /* ---------- team + contact ---------- */
+  $('#teamgrid').innerHTML=TEAM.map(t=>`<div class="member"><img src="${t.img}" alt="${esc(t.name)}"><h3>${esc(t.name)}</h3><div class="t">${esc(t.title)}</div><p>${esc(t.bio)}</p><a href="tel:${t.phone.replace(/\./g,'')}">T ${t.phone}</a>${t.cell?`<a href="tel:${t.cell.replace(/\./g,'')}">C ${t.cell}</a>`:''}<a href="mailto:${t.email}">${t.email}</a></div>`).join('');
+  $('#contactgrid').innerHTML=`
+    <div class="card"><h3>Kidder Mathews — Gauthier / Bloom Team</h3>
+      ${TEAM.map(t=>`<p><b>${esc(t.name)}</b> · <a href="tel:${(t.cell||t.phone).replace(/\./g,'')}">${t.cell||t.phone}</a> · <a href="mailto:${t.email}">${t.email}</a></p>`).join('')}
+      <p style="color:var(--mid);font-size:14px;margin-top:10px">500 108th Avenue NE, Suite 2400, Bellevue, WA 98004</p>
+    </div>
+    <div class="card"><h3>Cornerstone General Contractors</h3><p>Dave Flynn</p><p>${esc(HQ.addr)}</p><p><a href="https://cornerstonegci.com" target="_blank" rel="noopener">cornerstonegci.com</a></p></div>`;
+
+  /* ---------- map ---------- */
+  const legend=$('#legend');
+  legend.innerHTML=`<span><i class="hq">HQ</i>Cornerstone — Bothell</span>`+PROPERTIES.map(p=>`<span><i>${p.n}</i>${esc(p.name.split(' — ')[0])}</span>`).join('');
+  function fallbackMap(){
+    const svg=$('#map-fallback');svg.style.display='block';
+    const pts=[HQ,...PROPERTIES];const lats=pts.map(p=>p.lat),lons=pts.map(p=>p.lon);
+    const pad=.02,minLa=Math.min(...lats)-pad,maxLa=Math.max(...lats)+pad,minLo=Math.min(...lons)-pad*1.5,maxLo=Math.max(...lons)+pad*1.5;
+    const X=lo=>60+(lo-minLo)/(maxLo-minLo)*880,Y=la=>40+(maxLa-la)/(maxLa-minLa)*480;
+    let s=`<rect width="1000" height="560" fill="#E9EDF0"/>`;
+    s+=`<text x="24" y="540" font-family="Montserrat" font-size="12" fill="#6B7680">Schematic — map tiles unavailable. Positions are approximate.</text>`;
+    s+=`<g transform="translate(${X(HQ.lon)},${Y(HQ.lat)}) rotate(45)"><rect x="-13" y="-13" width="26" height="26" rx="5" fill="#1D1E28" stroke="#fff" stroke-width="3"/></g><text x="${X(HQ.lon)+20}" y="${Y(HQ.lat)+5}" font-family="Source Sans 3" font-size="14" font-weight="600" fill="#1D1E28">Cornerstone HQ</text>`;
+    PROPERTIES.forEach(p=>{s+=`<circle cx="${X(p.lon)}" cy="${Y(p.lat)}" r="15" fill="#DD1A32" stroke="#fff" stroke-width="3"/><text x="${X(p.lon)}" y="${Y(p.lat)+5}" text-anchor="middle" font-family="Montserrat" font-weight="700" font-size="13" fill="#fff">${p.n}</text><text x="${X(p.lon)+22}" y="${Y(p.lat)+5}" font-family="Source Sans 3" font-size="14" font-weight="600" fill="#1D1E28">${esc(p.name.split(' — ')[0])}</text>`;});
+    svg.innerHTML=s;
+  }
+  function initMap(){
+    if(!window.L){fallbackMap();return;}
+    const map=L.map('map',{scrollWheelZoom:false});
+    const tiles=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Imagery © Esri'});
+    const labels=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,opacity:.9});
+    let loaded=false,failed=0;
+    tiles.on('tileload',()=>{loaded=true;});tiles.on('tileerror',()=>{failed++;if(!loaded&&failed>=4)bail();});
+    tiles.addTo(map);labels.addTo(map);
+    const pts=[];
+    const hqIcon=L.divIcon({className:'',html:'<div class="pin hq"><span>HQ</span></div>',iconSize:[26,26],iconAnchor:[13,13]});
+    L.marker([HQ.lat,HQ.lon],{icon:hqIcon,zIndexOffset:1000}).addTo(map).bindPopup(`<b>Cornerstone General Contractors</b><br>${esc(HQ.addr)}`);pts.push([HQ.lat,HQ.lon]);
+    PROPERTIES.forEach(p=>{
+      const ic=L.divIcon({className:'',html:`<div class="pin">${p.n}</div>`,iconSize:[30,30],iconAnchor:[15,15]});
+      L.marker([p.lat,p.lon],{icon:ic}).addTo(map).bindPopup(`<b>${p.n}. ${esc(p.name)}</b><br>${esc(p.addr)}, ${esc(p.city)}<br>${esc(p.sfLabel)} · ${esc(p.price)}<br><a href="#${p.id}">Details ↓</a>`);
+      pts.push([p.lat,p.lon]);
+    });
+    map.fitBounds(pts,{padding:[50,50]});
+    let bailed=false;function bail(){if(bailed)return;bailed=true;map.remove();$('#map').innerHTML='<svg id="map-fallback" viewBox="0 0 1000 560"></svg>';fallbackMap();}setTimeout(()=>{if(!loaded)bail();},8000);
+  }
+  if(document.readyState==='complete')initMap();else window.addEventListener('load',initMap);
+})();
+</script>
+</body>
+</html>

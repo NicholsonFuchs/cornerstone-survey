@@ -1,0 +1,158 @@
+// Property data — Cornerstone General Contractors survey
+const HQ = { name: "Cornerstone General Contractors", addr: "11805 North Creek Parkway S, Suite 115, Bothell, WA 98011", lat: 47.7623682, lon: -122.1812871 };
+
+const PROPERTIES = [
+  {
+    id: "west-willows", n: 1, sfShort: "45,395",
+    name: "West Willows Tech Center — Buildings A & B",
+    addr: "8700 148th Ave NE / 14720 NE 87th St", city: "Redmond", zip: "98052",
+    lat: 47.68088, lon: -122.14380,
+    type: "Flex / Office",
+    sf: 45395, sfLabel: "32,164 SF (Bldg A) + 13,231 SF (Bldg B)",
+    office: 27901, wh: 4263,
+    officeLabel: "Bldg A: 27,901 office / 4,263 whse · Bldg B: 13,231 flex",
+    stories: "2 (each building)",
+    clear: "—", doors: "3 grade-level (Bldg A); potential grade door (Bldg B)",
+    power: "—", parking: "Surface, campus park",
+    built: "—", lot: "9.40 AC campus (5 buildings, 164,000 RSF)",
+    deal: "For lease", dealNote: "Lease with option to purchase or outright purchase may be possible",
+    dealKey: "lease-option",
+    price: "Negotiable", priceNote: "NNN; base rent negotiable",
+    avail: "Bldg B now · Bldg A Q3 2027",
+    hl: [
+      "Building A: full 32,164 SF two-story building available Q3 2027 — 17,610 SF ground floor (13,347 office + 4,263 warehouse) and 14,554 SF second floor",
+      "Building B: 13,231 SF available now, divisible to 8,845 SF (Suite A) and 4,386 SF (Suite B); frontage on 148th Ave NE",
+      "Brick two-story buildings, glass entries, grade-level loading, recent upgrades (HVAC, landscaping, paint, signage)",
+      "Owner may entertain a lease with purchase option or an outright sale"
+    ],
+    listing: "Jim Reed & Carson Scott, Cushman & Wakefield (Alco Investment Company)",
+    flyer: "flyers/west-willows.pdf",
+    imgs: ["img/ww-1.jpg", "img/ww-2.jpg", "img/ww-3.jpg", "img/ww-4.jpg", "img/ww-5.jpg", "img/ww-6.jpg", "img/ww-7.jpg"],
+    plans: [["Building A — Floors 1 & 2", "img/ww-plan-a.png"], ["Building B — Suites A & B", "img/ww-plan-b.png"]]
+  },
+  {
+    id: "cascade-utilities", n: 2, sfShort: "3,500 – 16,796",
+    name: "Cascade Utilities Building",
+    addr: "7554 185th Ave NE", city: "Redmond", zip: "98052",
+    lat: 47.671276, lon: -122.092986,
+    type: "Office / Flex",
+    sf: 16796, sfLabel: "3,500 – 16,796 SF",
+    office: 15734, wh: 1062,
+    officeLabel: "15,734 office / 1,062 whse (at full 16,796 SF)",
+    stories: "2",
+    clear: "—", doors: "Grade-level loading (warehouse bay)",
+    power: "—", parking: "Surface",
+    built: "—", lot: "—",
+    deal: "For lease", dealNote: "Owner would consider a sale",
+    dealKey: "lease-sale",
+    price: "$24.00/SF/yr NNN", priceNote: "Lease rate; sale price not published",
+    avail: "Now",
+    hl: [
+      "Demising options: 3,500 SF office · 6,762 SF office + 1,062 SF warehouse · 11,096 SF full first floor · 5,700 SF second floor · 16,796 SF combined",
+      "Existing buildout: conference rooms, kitchens, server room, reception",
+      "Sprinklered; grade-level loading at the warehouse",
+      "Owner would consider a sale"
+    ],
+    listing: "Kidder Mathews — Gauthier / Bloom team",
+    flyer: "flyers/cascade-utilities.pdf",
+    imgs: ["img/cu-1.jpg", "img/cu-2.jpg", "img/cu-3.jpg"],
+    plans: [["First floor — demising options", "img/cu-plan-1.png"], ["Second floor — 5,700 SF", "img/cu-plan-2.png"], ["Combined floors — 16,796 SF", "img/cu-plan-combined.png"]]
+  },
+  {
+    id: "520-corporate", n: 3, sfShort: "22,338",
+    name: "520 Corporate Center — Building B",
+    addr: "2353 130th Ave NE", city: "Bellevue", zip: "98005",
+    lat: 47.6306626, lon: -122.1693431,
+    type: "Office",
+    sf: 22338, sfLabel: "6,523 SF + 15,815 SF (+2,458 SF storage)",
+    office: 22338, wh: 0,
+    officeLabel: "All office; 2,458 SF additional storage",
+    stories: "2",
+    clear: "—", doors: "None (office)",
+    power: "—", parking: "3.5 / 1,000 SF",
+    built: "—", lot: "—",
+    deal: "For lease", dealNote: "Owner would consider a sale",
+    dealKey: "lease-sale",
+    price: "$29.00/SF/yr", priceNote: "Suite 100 gross; Suite 200 base rent",
+    avail: "Now",
+    hl: [
+      "Suite 100: 6,523 SF ground floor — 11 private offices, conference room, kitchenette, server room",
+      "Suite 200: 15,815 SF — entire second floor, direct elevator access, mix of open area and window-line offices",
+      "2,458 SF additional storage available",
+      "2 miles to downtown Bellevue; near Spring District, light rail, I-405 and SR-520"
+    ],
+    listing: "Kidder Mathews — Todd Gauthier, Jason Bloom, Jack Albrecht",
+    flyer: "flyers/520-corporate-b.pdf",
+    imgs: ["img/520-1.jpg", "img/520-2.jpg", "img/520-3.jpg"],
+    plans: [["Suite 100 — 6,523 SF", "img/520-plan-100.png"], ["Suite 200 — 15,815 SF", "img/520-plan-200.png"]]
+  },
+  {
+    id: "play-visions", n: 4, sfShort: "28,500",
+    name: "Play Visions Building",
+    addr: "19180 144th Ave NE", city: "Woodinville", zip: "98072",
+    lat: 47.7666462, lon: -122.1475793,
+    type: "Industrial / Office",
+    sf: 28500, sfLabel: "28,500 SF",
+    office: 5400, wh: 23100,
+    officeLabel: "5,400 office / ~23,100 whse — additional office can be built out",
+    stories: "1 (two-story office component)",
+    clear: "25'", doors: "3 dock-high + 1 grade-level",
+    power: "3-phase, 120/208V, 600A", parking: "Surface",
+    built: "1998", lot: "1.63 AC (71,215 SF)",
+    deal: "For sale", dealNote: "Listed for sale",
+    dealKey: "sale",
+    price: "$9,200,000", priceNote: "≈ $323/SF on 28,500 SF",
+    avail: "Now",
+    hl: [
+      "Standalone concrete tilt-up headquarters building on 1.63 AC; single tenant",
+      "25' clear, fully sprinklered warehouse; 3 dock-high and 1 grade-level door",
+      "5,400 SF existing office (perimeter offices, open area, conference rooms, kitchen) with room to build out more",
+      "Heavy power: 3-phase, 120/208V, 600 amps",
+      "0.7 miles to SR-522; close-in Woodinville location"
+    ],
+    listing: "Kidder Mathews — Todd Gauthier, Jason Bloom, Carter Nicholson",
+    flyer: "",
+    imgs: ["img/pv-1.jpg", "img/pv-2.jpg", "img/pv-3.jpg"],
+    plans: []
+  },
+  {
+    id: "160th-interchange", n: 5, sfShort: "39,107",
+    name: "160th Interchange Plaza",
+    addr: "16017 Juanita Woodinville Way NE", city: "Bothell", zip: "98011",
+    lat: 47.7442889, lon: -122.1859071,
+    type: "Office / Retail (shell)",
+    sf: 39107, sfLabel: "39,107 RSF (66,986 GSF incl. garage)",
+    office: 39107, wh: 0,
+    officeLabel: "Mostly shell — configurable; ~13,000 SF floor plates",
+    stories: "3",
+    clear: "—", doors: "Loading area 10' × 45'",
+    power: "PSE electric & gas", parking: "2.74 / 1,000 SF — 31 surface + 76 covered",
+    built: "2008", lot: "1.11 AC (48,325 SF)",
+    deal: "For sale", dealNote: "Unpriced — call for offers",
+    dealKey: "sale",
+    price: "Unpriced", priceNote: "Owner/user or value-add",
+    avail: "Now (vacant)",
+    hl: [
+      "Entire three-story building, vacant and mostly in shell condition — can be built out to suit",
+      "Floor plates of ~13,000 SF; first floor can be leased as retail on a single- or multi-tenant basis for income",
+      "±2.74 stalls / 1,000 SF with 76 covered stalls in a structured garage",
+      "Visibility and signage at the I-405 / NE 160th interchange (±160,000 vehicles per day)",
+      "Fully sprinklered; structural steel on concrete podium; zoning R-AC / OP / NB"
+    ],
+    listing: "Adrienne Hunter & Jim Reed, Cushman & Wakefield",
+    flyer: "flyers/160th-interchange.pdf",
+    imgs: ["img/160-1.jpg", "img/160-2.jpg", "img/160-3.jpg", "img/160-4.jpg", "img/160-5.jpg", "img/160-6.jpg", "img/160-7.jpg", "img/160-8.jpg"],
+    plans: [["Site plan", "img/160-site.png"], ["Floor one — 12,997 GSF", "img/160-plan-1.png"], ["Floor two — 13,005 GSF", "img/160-plan-2.png"], ["Floor three — 13,005 GSF", "img/160-plan-3.png"]]
+  }
+];
+
+const TEAM = [
+  { name: "Todd Gauthier", title: "Executive Vice President | Shareholder", phone: "425.450.1118", email: "todd.gauthier@kidder.com", img: "img/gauthier-todd.jpg",
+    bio: "35 years of commercial real estate experience advising tenants, landlords and investors across the Eastside office, flex and industrial markets, with more than $5 billion in total transaction volume." },
+  { name: "Jason Bloom", title: "Executive Vice President | Shareholder", phone: "425.450.1102", email: "jason.bloom@kidder.com", img: "img/bloom-jason.jpg",
+    bio: "18+ years specializing in office and flex/industrial leasing, sales and strategic planning throughout the Eastside, with total transaction value over $4 billion. Consistently a Kidder Mathews top producer." },
+  { name: "Carter Nicholson", title: "Senior Associate", phone: "425.450.1145", cell: "425.241.9886", email: "carter.nicholson@kidder.com", img: "img/nicholson-carter.jpg",
+    bio: "Senior Associate on the Gauthier/Bloom team, focused on office, flex and industrial properties on the Eastside and Northend. Bellevue native; Boise State University." },
+  { name: "Greg Fuchs", title: "Senior Associate", phone: "425.450.1161", cell: "206.992.2727", email: "greg.fuchs@kidder.com", img: "img/fuchs-greg.jpg",
+    bio: "Senior Associate on the Gauthier/Bloom team specializing in Eastside office and flex properties. Oregon State University (BBA); Washington State University (MBA)." }
+];
