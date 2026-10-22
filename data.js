@@ -3,57 +3,58 @@ const HQ = { name: "Cornerstone General Contractors", addr: "11805 North Creek P
 
 const PROPERTIES = [
   {
-    id: "west-willows", n: 1, sfShort: "45,395",
-    name: "West Willows Tech Center — Buildings A & B",
-    addr: "8700 148th Ave NE / 14720 NE 87th St", city: "Redmond", zip: "98052",
+    id: "west-willows", n: 1, sfShort: "32,164",
+    name: "West Willows Tech Center — Building A",
+    addr: "14720 NE 87th St", city: "Redmond", zip: "98052",
     lat: 47.68088, lon: -122.14380,
     type: "Flex / Office",
-    sf: 45395, sfLabel: "32,164 SF (Bldg A) + 13,231 SF (Bldg B)",
+    sf: 32164, sfLabel: "32,164 SF (full building)",
     office: 27901, wh: 4263,
-    officeLabel: "Bldg A: 27,901 office / 4,263 whse · Bldg B: 13,231 flex",
+    officeLabel: "27,901 office / 4,263 warehouse",
     stories: "2 (each building)",
-    clear: "—", doors: "3 grade-level (Bldg A); potential grade door (Bldg B)",
+    clear: "—", doors: "3 grade-level doors",
     power: "—", parking: "Surface, campus park",
     built: "—", lot: "9.40 AC campus (5 buildings, 164,000 RSF)",
     deal: "For lease", dealNote: "Lease with option to purchase or outright purchase may be possible",
     dealKey: "lease-option",
     price: "Negotiable", priceNote: "NNN; base rent negotiable",
-    avail: "Bldg B now · Bldg A Q3 2027",
+    avail: "Q3 2027",
     hl: [
-      "Building A: full 32,164 SF two-story building available Q3 2027 — 17,610 SF ground floor (13,347 office + 4,263 warehouse) and 14,554 SF second floor",
-      "Building B: 13,231 SF available now, divisible to 8,845 SF (Suite A) and 4,386 SF (Suite B); frontage on 148th Ave NE",
-      "Brick two-story buildings, glass entries, grade-level loading, recent upgrades (HVAC, landscaping, paint, signage)",
+      "Full 32,164 SF two-story building available Q3 2027 — 17,610 SF ground floor (13,347 office + 4,263 warehouse) and 14,554 SF second floor",
+      "Part of the 5-building, 164,000 RSF West Willows campus off Willows Road and 148th Ave NE",
+      "Brick two-story building, glass entry, three grade-level loading doors, recent campus upgrades (HVAC, landscaping, paint, signage)",
       "Owner may entertain a lease with purchase option or an outright sale"
     ],
     listing: "Jim Reed & Carson Scott, Cushman & Wakefield (Alco Investment Company)",
     flyer: "flyers/west-willows.pdf",
-    imgs: ["img/ww-1.jpg", "img/ww-2.jpg", "img/ww-3.jpg", "img/ww-4.jpg", "img/ww-5.jpg", "img/ww-6.jpg", "img/ww-7.jpg"],
-    plans: [["Building A — Floors 1 & 2", "img/ww-plan-a.png"], ["Building B — Suites A & B", "img/ww-plan-b.png"]]
+    imgs: ["img/ww-4.jpg", "img/ww-5.jpg", "img/ww-1.jpg", "img/ww-6.jpg", "img/ww-7.jpg"],
+    plans: [["Building A — Floors 1 & 2", "img/ww-plan-a.png"]]
   },
   {
-    id: "cascade-utilities", n: 2, sfShort: "3,500 – 16,796",
+    id: "cascade-utilities", n: 2, sfShort: "24,000",
     name: "Cascade Utilities Building",
     addr: "7554 185th Ave NE", city: "Redmond", zip: "98052",
     lat: 47.671276, lon: -122.092986,
     type: "Office / Flex",
-    sf: 16796, sfLabel: "3,500 – 16,796 SF",
+    sf: 24000, sfLabel: "24,000 SF building + 35,000 SF yard (3,500 – 16,796 SF available)",
     office: 15734, wh: 1062,
     officeLabel: "15,734 office / 1,062 whse (at full 16,796 SF)",
     stories: "2",
     clear: "—", doors: "Grade-level loading (warehouse bay)",
     power: "—", parking: "Surface",
-    built: "—", lot: "—",
+    built: "—", lot: "24,000 SF building with an additional 35,000 SF of yard",
     deal: "For lease", dealNote: "Owner would consider a sale",
     dealKey: "lease-sale",
     price: "$24.00/SF/yr NNN", priceNote: "Lease rate; sale price not published",
     avail: "Now",
     hl: [
+      "24,000 SF total building with an additional 35,000 SF of yard",
       "Demising options: 3,500 SF office · 6,762 SF office + 1,062 SF warehouse · 11,096 SF full first floor · 5,700 SF second floor · 16,796 SF combined",
       "Existing buildout: conference rooms, kitchens, server room, reception",
       "Sprinklered; grade-level loading at the warehouse",
       "Owner would consider a sale"
     ],
-    listing: "Kidder Mathews — Gauthier / Bloom team",
+    listing: "Kidder Mathews",
     flyer: "flyers/cascade-utilities.pdf",
     imgs: ["img/cu-1.jpg", "img/cu-2.jpg", "img/cu-3.jpg"],
     plans: [["First floor — demising options", "img/cu-plan-1.png"], ["Second floor — 5,700 SF", "img/cu-plan-2.png"], ["Combined floors — 16,796 SF", "img/cu-plan-combined.png"]]
@@ -147,12 +148,8 @@ const PROPERTIES = [
 ];
 
 const TEAM = [
-  { name: "Todd Gauthier", title: "Executive Vice President | Shareholder", phone: "425.450.1118", email: "todd.gauthier@kidder.com", img: "img/gauthier-todd.jpg",
-    bio: "35 years of commercial real estate experience advising tenants, landlords and investors across the Eastside office, flex and industrial markets, with more than $5 billion in total transaction volume." },
-  { name: "Jason Bloom", title: "Executive Vice President | Shareholder", phone: "425.450.1102", email: "jason.bloom@kidder.com", img: "img/bloom-jason.jpg",
-    bio: "18+ years specializing in office and flex/industrial leasing, sales and strategic planning throughout the Eastside, with total transaction value over $4 billion. Consistently a Kidder Mathews top producer." },
   { name: "Carter Nicholson", title: "Senior Associate", phone: "425.450.1145", cell: "425.241.9886", email: "carter.nicholson@kidder.com", img: "img/nicholson-carter.jpg",
-    bio: "Senior Associate on the Gauthier/Bloom team, focused on office, flex and industrial properties on the Eastside and Northend. Bellevue native; Boise State University." },
+    bio: "Senior Associate at Kidder Mathews in Bellevue, focused on office, flex and industrial properties on the Eastside and Northend. Bellevue native; Boise State University." },
   { name: "Greg Fuchs", title: "Senior Associate", phone: "425.450.1161", cell: "206.992.2727", email: "greg.fuchs@kidder.com", img: "img/fuchs-greg.jpg",
-    bio: "Senior Associate on the Gauthier/Bloom team specializing in Eastside office and flex properties. Oregon State University (BBA); Washington State University (MBA)." }
+    bio: "Senior Associate at Kidder Mathews in Bellevue specializing in Eastside office and flex properties. Oregon State University (BBA); Washington State University (MBA)." }
 ];

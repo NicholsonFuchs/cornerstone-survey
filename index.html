@@ -25,13 +25,13 @@ img{display:block;max-width:100%}
 /* nav */
 .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(12px);-webkit-backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line)}
 .nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
-.nav .logo img{height:40px;width:auto}
+.nav .logo{display:flex;align-items:center;gap:10px;text-decoration:none}.nav .logo span{font-size:12px;color:var(--mid);white-space:nowrap}.nav .logo img{height:40px;width:auto}
 .nav ul{list-style:none;margin:0;padding:0;display:flex;gap:28px}
 .nav ul a{text-decoration:none;font-weight:600;font-size:14px;color:var(--slate)}
 .nav ul a:hover{color:var(--red)}
 .nav .by{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--mid);white-space:nowrap}
 .nav .by img{height:22px;width:auto;color:var(--ink)}
-@media (max-width:860px){.nav ul{display:none}.nav .by span{display:none}}
+@media (max-width:860px){.nav ul{display:none}.nav .by span,.nav .logo span{display:none}}
 
 /* hero */
 .hero{padding:72px 0 48px}
@@ -129,7 +129,7 @@ table.cmp td a:hover .name{color:var(--red)}
 @media (max-width:520px){.plans figure{width:100%}}
 
 /* team */
-.team{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.team{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:760px}
 .member{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
 .member img{width:96px;height:96px;border-radius:50%;object-fit:cover;margin-bottom:14px}
 .member h3{font-size:17px;font-weight:700}
@@ -169,7 +169,7 @@ footer p{max-width:70em;margin:10px 0 0}
 
 <nav class="nav">
   <div class="wrap">
-    <a class="logo" href="#top"><img src="img/cs_black.svg" alt="Cornerstone General Contractors"></a>
+    <a class="logo" href="#top"><span>Prepared for</span><img src="img/cs_black.svg" alt="Cornerstone General Contractors"></a>
     <ul>
       <li><a href="#map">Map</a></li>
       <li><a href="#compare">Comparison</a></li>
@@ -184,11 +184,11 @@ footer p{max-width:70em;margin:10px 0 0}
 <header class="hero" id="top">
   <div class="wrap">
     <div class="eyebrow">Property Survey</div>
-    <h1>Purchase &amp; lease options for Cornerstone General Contractors</h1>
-    <p>Five buildings on the Eastside and Northend, from 3,500 SF suites up to 45,000 SF, ranging from listed-for-sale to lease with a possible purchase option. Details, floor plans and flyers for each are below.</p>
+    <h1>Purchase options for Cornerstone General Contractors</h1>
+    <p>Five buildings on the Eastside and Northend, 16,800 to 39,000 SF, ranging from listed-for-sale to lease with a possible purchase option. Details, floor plans and flyers for each are below.</p>
     <div class="meta">
       <div><b>Prepared for</b>Dave Flynn, Cornerstone General Contractors</div>
-      <div><b>Prepared by</b>Todd Gauthier, Jason Bloom, Carter Nicholson &amp; Greg Fuchs — Kidder Mathews</div>
+      <div><b>Prepared by</b>Carter Nicholson &amp; Greg Fuchs — Kidder Mathews</div>
       <div><b>Date</b>October 22, 2026</div>
     </div>
   </div>
@@ -372,7 +372,7 @@ footer p{max-width:70em;margin:10px 0 0}
   /* ---------- team + contact ---------- */
   $('#teamgrid').innerHTML=TEAM.map(t=>`<div class="member"><img src="${t.img}" alt="${esc(t.name)}"><h3>${esc(t.name)}</h3><div class="t">${esc(t.title)}</div><p>${esc(t.bio)}</p><a href="tel:${t.phone.replace(/\./g,'')}">T ${t.phone}</a>${t.cell?`<a href="tel:${t.cell.replace(/\./g,'')}">C ${t.cell}</a>`:''}<a href="mailto:${t.email}">${t.email}</a></div>`).join('');
   $('#contactgrid').innerHTML=`
-    <div class="card"><h3>Kidder Mathews — Gauthier / Bloom Team</h3>
+    <div class="card"><h3>Kidder Mathews</h3>
       ${TEAM.map(t=>`<p><b>${esc(t.name)}</b> · <a href="tel:${(t.cell||t.phone).replace(/\./g,'')}">${t.cell||t.phone}</a> · <a href="mailto:${t.email}">${t.email}</a></p>`).join('')}
       <p style="color:var(--mid);font-size:14px;margin-top:10px">500 108th Avenue NE, Suite 2400, Bellevue, WA 98004</p>
     </div>
